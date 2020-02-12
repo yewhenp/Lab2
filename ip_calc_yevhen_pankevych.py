@@ -21,17 +21,21 @@ def main():
     else:
         try:
             print("IP address:", get_ip_from_raw_address(raw_address))
-            print("Network Address:", get_network_address_from_raw_address(raw_address))
-            print("Broadcast Address:", get_broadcast_address_from_raw_address(raw_address))
-            print("Binary Subnet Mask:", get_binary_mask_from_raw_address(raw_address))
-            print("Number of usable hosts:",\
+            print("Network Address:",
+                  get_network_address_from_raw_address(raw_address))
+            print("Broadcast Address:",
+                  get_broadcast_address_from_raw_address(raw_address))
+            print("Binary Subnet Mask:",
+                  get_binary_mask_from_raw_address(raw_address))
+            print("Number of usable hosts:",
                   get_number_of_usable_hosts_from_raw_address(raw_address))
-            print("First usable host IP:",\
+            print("First usable host IP:",
                   get_first_usable_ip_address_from_raw_address(raw_address))
-            print("Penultimate usable host IP:",\
+            print("Penultimate usable host IP:",
                   get_penultimate_usable_ip_address_from_raw_address(raw_address))
             print("IP class:", get_ip_class_from_raw_address(raw_address))
-            print("IP type private:", check_private_ip_address_from_raw_address(raw_address))
+            print("IP type private:",
+                  check_private_ip_address_from_raw_address(raw_address))
         except TypeError:
             print("Error")
         except IndexError:
@@ -224,7 +228,7 @@ def get_first_usable_ip_address_from_raw_address(raw_address):
         ip_host_bit = int(ip_arr[3]) + 1
 
         ip_first_host = str(ip_arr[0]) + "." +\
-                        str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
+            str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
 
         return ip_first_host
     return None
@@ -246,7 +250,7 @@ def get_penultimate_usable_ip_address_from_raw_address(raw_address):
         ip_host_bit = int(ip_arr[3]) - 2
 
         ip_prelast_host = str(ip_arr[0]) + "." +\
-                          str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
+            str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
 
         return ip_prelast_host
     return None
@@ -278,9 +282,11 @@ def get_ip_and_mask(raw_address):
     str -> (str, str)
     This func returns binary ip and mask
     >>> get_ip_and_mask("91.124.230.205/30")
-    ('0b01011011011111001110011011001101', '0b11111111111111111111111111111100')
+    ('0b01011011011111001110011011001101', \
+'0b11111111111111111111111111111100')
     >>> get_ip_and_mask("192.168.0.3/24")
-    ('0b11000000101010000000000000000011', '0b11111111111111111111111100000000')
+    ('0b11000000101010000000000000000011', \
+'0b11111111111111111111111100000000')
     """
     ip_address, mask = raw_address.split("/")
     mask = int(mask)
