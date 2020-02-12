@@ -13,7 +13,7 @@ def main():
     """
     raw_address = input()
 
-    pat = re.compile("^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
+    pat = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$")
     check_pref = pat.match(raw_address)
 
     if not check_pref:
@@ -148,6 +148,8 @@ def get_binary_mask_from_raw_address(raw_address):
     """
     ip_bin, mask_bin = get_ip_and_mask(raw_address)
 
+    ip_bin = ip_bin * 1
+
     mask_bin = mask_bin[2::]
 
     ready_mask = ""
@@ -168,7 +170,8 @@ def get_number_of_usable_hosts_from_raw_address(raw_address):
     >>> get_number_of_usable_hosts_from_raw_address("192.168.0.3/24")
     254
     """
-    ip, mask = raw_address.split("/")
+    ip_address, mask = raw_address.split("/")
+    ip_address = ip_address * 1
     mask = int(mask)
 
     max_num = (2 ** (32 - mask)) - 2
@@ -185,22 +188,24 @@ def get_ip_class_from_raw_address(raw_address):
     >>> get_ip_class_from_raw_address("192.168.0.3/24")
     'C'
     """
-    ip, mask = get_norm_mask_and_ip(raw_address)
+    ip_address, mask = get_norm_mask_and_ip(raw_address)
+    mask = mask * 1
 
-    ip_arr = ip.split(".")
+    ip_arr = ip_address.split(".")
 
     ip_class = int(ip_arr[0])
 
     if 1 <= ip_class <= 126:
         return "A"
-    elif 128 <= ip_class <= 191:
+    if 128 <= ip_class <= 191:
         return "В"
-    elif 192 <= ip_class <= 223:
+    if 192 <= ip_class <= 223:
         return "C"
-    elif 224 <= ip_class <= 239:
+    if 224 <= ip_class <= 239:
         return "D"
-    elif 240 <= ip_class <= 247:
+    if 240 <= ip_class <= 247:
         return "E"
+    return None
 
 
 def get_first_usable_ip_address_from_raw_address(raw_address):
@@ -213,15 +218,16 @@ def get_first_usable_ip_address_from_raw_address(raw_address):
     '192.168.0.1'
     """
     if get_number_of_usable_hosts_from_raw_address(raw_address) > 0:
-        ip = get_network_address_from_raw_address(raw_address)
+        ip_address = get_network_address_from_raw_address(raw_address)
 
-        ip_arr = ip.split(".")
+        ip_arr = ip_address.split(".")
         ip_host_bit = int(ip_arr[3]) + 1
 
         ip_first_host = str(ip_arr[0]) + "." +\
                         str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
 
         return ip_first_host
+    return None
 
 
 def get_penultimate_usable_ip_address_from_raw_address(raw_address):
@@ -234,15 +240,16 @@ def get_penultimate_usable_ip_address_from_raw_address(raw_address):
     '192.168.0.253'
     """
     if get_number_of_usable_hosts_from_raw_address(raw_address) > 1:
-        ip = get_broadcast_address_from_raw_address(raw_address)
+        ip_address = get_broadcast_address_from_raw_address(raw_address)
 
-        ip_arr = ip.split(".")
+        ip_arr = ip_address.split(".")
         ip_host_bit = int(ip_arr[3]) - 2
 
         ip_prelast_host = str(ip_arr[0]) + "." +\
                           str(ip_arr[1]) + "." + str(ip_arr[2]) + "." + str(ip_host_bit)
 
         return ip_prelast_host
+    return None
 
 
 def check_private_ip_address_from_raw_address(raw_address):
@@ -254,12 +261,14 @@ def check_private_ip_address_from_raw_address(raw_address):
     >>> check_private_ip_address_from_raw_address("192.168.0.3/24")
     True
     """
-    ip, mask = get_norm_mask_and_ip(raw_address)
+    ip_address, mask = get_norm_mask_and_ip(raw_address)
+    mask = mask * 1
 
-    ip_arr = ip.split(".")
+    ip_arr = ip_address.split(".")
     ip_type = int(ip_arr[0])
 
-    if ip_type == 10 or ip_type == 127 or ip_type == 172 or ip_type == 192:
+    example_list = [10, 127, 172, 192]
+    if ip_type in example_list:
         return True
     return False
 
@@ -273,10 +282,10 @@ def get_ip_and_mask(raw_address):
     >>> get_ip_and_mask("192.168.0.3/24")
     ('0b11000000101010000000000000000011', '0b11111111111111111111111100000000')
     """
-    ip, mask = raw_address.split("/")
+    ip_address, mask = raw_address.split("/")
     mask = int(mask)
 
-    ip_parts = ip.split(".")
+    ip_parts = ip_address.split(".")
 
     mask_bin = '0b'
     mask_bin += '1' * mask
@@ -302,8 +311,8 @@ def get_norm_mask_and_ip(raw_address):
     >>> get_norm_mask_and_ip("192.168.0.3/24")
     ('192.168.0.3', '24')
     """
-    ip, mask = raw_address.split("/")
-    return ip, mask
+    ip_address, mask = raw_address.split("/")
+    return ip_address, mask
 
 
 if __name__ == "__main__":
